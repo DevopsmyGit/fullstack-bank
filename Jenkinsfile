@@ -5,6 +5,7 @@ pipeline {
         jdk 'jdk11'
         nodejs 'nodejs17'
         dockerTool 'docker'
+        maven 'maven3'
         
     }
     
