@@ -4,7 +4,6 @@ pipeline {
     tools{
         jdk 'jdk11'
         nodejs 'nodejs17'
-        dockerTool 'docker'
         maven 'maven3'
         
     }
@@ -29,12 +28,6 @@ pipeline {
           }
         }
         
-        stage('TRIVY FS SCAN') {
-            steps {
-                sh "trivy fs ."
-            }
-        }
-        
         
          stage('Install Dependencies') {
             steps {
@@ -55,12 +48,6 @@ pipeline {
                 dir('/root/.jenkins/workspace/Bank/app/frontend') {
                     sh "npm install"
                 }
-            }
-        }
-        
-        stage('Deploy to Conatiner') {
-            steps {
-                sh "npm run compose:up -d"
             }
         }
     }
