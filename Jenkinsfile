@@ -27,18 +27,11 @@ pipeline {
             }
           }
         }
-        
-        
-         stage('Install Dependencies') {
-            steps {
-                sh "npm --version"
-                sh "npm install"
-            }
-        }
+
         
         stage('Backend') {
             steps {
-                dir('/root/.jenkins/workspace/Bank/app/backend') {
+                dir('/app/backend') {
                     sh "npm install"
                 }
             }
@@ -46,7 +39,7 @@ pipeline {
         
         stage('frontend') {
             steps {
-                dir('/root/.jenkins/workspace/Bank/app/frontend') {
+                dir('/app/frontend') {
                     sh "npm install"
                 }
             }
