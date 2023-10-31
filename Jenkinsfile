@@ -4,32 +4,33 @@ pipeline {
     tools{
         jdk 'jdk11'
         nodejs 'nodejs17'
+        dockerTool 'docker'
         
     }
     
-    environment{
-        SCANNER_HOME= tool 'sonar-scanner'
-    }
+    
     
     stages {
-        stage('Git Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/DevopsmyGit/fullstack-bank.git'
+        stage('SCM'){
+            steps{
+                git branch: 'main', changelog: false, poll: false, url: 'https://github.com/DevopsmyGit/spring-proj.git'
             }
         }
-    
+
+        stage('Static Code Analysis') {
+          environment {
+            SONAR_URL = "http://192.168.64.1:9000/"
+          }
+          steps {
+            withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_AUTH_TOKEN')]) {
+              sh 'mvn sonar:sonar -Dsonar.login=$SONAR_AUTH_TOKEN -Dsonar.host.url=${SONAR_URL}'
+            }
+          }
+        }
         
         stage('TRIVY FS SCAN') {
             steps {
                 sh "trivy fs ."
-            }
-        }
-        
-        stage('SONARQUBE ANALYSIS') {
-            steps {
-                withSonarQubeEnv('sonar') {
-                    sh " $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Bank -Dsonar.projectKey=Bank "
-                }
             }
         }
         
